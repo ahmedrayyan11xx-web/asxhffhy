@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيئة اللغات الثلاث المستقلة</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --editor-bg: #0b0f19;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            margin: 0 0 4px 0;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #818cf8, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .section-box {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .lang-html {
+            color: #f97316;
+        }
+
+        .lang-js {
+            color: #38bdf8;
+        }
+
+        .lang-python {
+            color: #facc15;
+        }
+
+        .code-wrapper {
+            display: flex;
+            background-color: var(--editor-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            height: 120px;
+            margin-bottom: 8px;
+        }
+
+        .code-wrapper:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .line-numbers {
+            width: 35px;
+            background-color: #080b13;
+            color: #475569;
+            padding: 8px 3px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            text-align: center;
+            user-select: none;
+            overflow: hidden;
+            border-left: 1px solid var(--border-color);
+        }
+
+        textarea {
+            flex-grow: 1;
+            background-color: transparent;
+            color: var(--text-main);
+            border: none;
+            padding: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            resize: none;
+            direction: ltr;
+            text-align: left;
+            outline: none;
+            white-space: pre;
+            overflow-y: auto;
+            tab-size: 4;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: 0.2s;
+            color: white;
+        }
+
+        .btn-run {
+            background-color: var(--accent-color);
+            flex: 2;
+        }
+
+        .btn-run:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-clear {
+            background-color: var(--danger-color);
+            flex: 1;
+        }
+
+        .btn-clear:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .preview-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .preview-box {
+            background-color: white;
+            border-radius: 6px;
+            height: 100px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            color: #1e293b;
+        }
+
+        .preview-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .console-output {
+            background-color: #0b0f19;
+            color: #38bdf8;
+            font-family: 'Fira Code', monospace;
+            padding: 8px;
+            margin: 0;
+            height: 100%;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            direction: ltr;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>⚡ بيئة اللغات (HTML - JS - Python)</h1>
+            <p>محرر مستقل لكل لغة مع زر التشغيل الخاص بها</p>
+        </header>
+
+        <!-- 1. قسم HTML -->
+        <div class="section-box">
+            <div class="section-header">
+                <span class="lang-html">🌐 1. محرر HTML</span>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">هيكل الصفحة</span>
+            </div>
+            <div class="code-wrapper">
+                <div id="lines-html" class="line-numbers">1</div>
+                <textarea id="code-html" placeholder="اكتب كود الـ HTML هنا..." spellcheck="false" autocomplete="off"
+                    oninput="updateLines('html')" onscroll="syncScroll('html')"></textarea>
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-clear" onclick="clearEditor('html')">🗑️ مسح</button>
+                <button class="btn btn-run" onclick="runHTML()">▶ تشغيل HTML</button>
+            </div>
+            <span class="preview-label">📺 شاشة نتيجة HTML:</span>
+            <div class="preview-box">
+                <iframe id="frame-html"></iframe>
+            </div>
+        </div>
+
+        <!-- 2. قسم JavaScript -->
+        <div class="section-box">
+            <div class="section-header">
+                <span class="lang-js">⚙️ 2. محرر JavaScript</span>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">التفاعل والمنطق</span>
+            </div>
+            <div class="code-wrapper">
+                <div id="lines-js" class="line-numbers">1</div>
+                <textarea id="code-js" placeholder="اكتب كود الـ JS هنا..." spellcheck="false" autocomplete="off"
+                    oninput="updateLines('js')" onscroll="syncScroll('js')"></textarea>
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-clear" onclick="clearEditor('js')">🗑️ مسح</button>
+                <button class="btn btn-run" onclick="runJS()">▶ تشغيل JS</button>
+            </div>
+            <span class="preview-label">📺 شاشة مخرجات ونواتج JavaScript (Console Output):</span>
+            <div class="preview-box">
+                <div id="output-js" class="console-output">اضغط زر تشغيل JS لعرض المخرجات...</div>
+            </div>
+        </div>
+
+        <!-- 3. قسم Python -->
+        <div class="section-box">
+            <div class="section-header">
+                <span class="lang-python">🐍 3. محرر Python</span>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">البرمجة النصية</span>
+            </div>
+            <div class="code-wrapper">
+                <div id="lines-python" class="line-numbers">1</div>
+                <textarea id="code-python" placeholder="اكتب كود بايثون هنا..." spellcheck="false" autocomplete="off"
+                    oninput="updateLines('python')" onscroll="syncScroll('python')"></textarea>
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-clear" onclick="clearEditor('python')">🗑️ مسح</button>
+                <button class="btn btn-run" onclick="runPython()">▶ تشغيل Python</button>
+            </div>
+            <span class="preview-label">📺 شاشة مخرجات Python (Output):</span>
+            <div class="preview-box">
+                <div id="output-python" class="console-output">اضغط زر تشغيل بايثون لعرض المخرجات...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateLines(lang) {
+            const textarea = document.getElementById(`code-${lang}`);
+            const lineNumbersDiv = document.getElementById(`lines-${lang}`);
+            const lines = textarea.value.split('\n').length;
+            let numbersHtml = '';
+            for (let i = 1; i <= lines; i++) {
+                numbersHtml += i + '<br>';
+            }
+            lineNumbersDiv.innerHTML = numbersHtml;
+        }
+
+        function syncScroll(lang) {
+            const textarea = document.getElementById(`code-${lang}`);
+            const lineNumbersDiv = document.getElementById(`lines-${lang}`);
+            lineNumbersDiv.scrollTop = textarea.scrollTop;
+        }
+
+        function runHTML() {
+            const code = document.getElementById('code-html').value;
+            const iframe = document.getElementById('frame-html');
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open(); doc.write(code); doc.close();
+        }
+
+        function runJS() {
+            const code = document.getElementById('code-js').value;
+            const outputDiv = document.getElementById('output-js');
+            let logs = [];
+
+            const originalConsoleLog = console.log;
+            console.log = function (message) {
+                logs.push(message);
+                originalConsoleLog.apply(console, arguments);
+            };
+
+            try {
+                let result = new Function(code)();
+                if (result !== undefined) {
+                    logs.push(result);
+                }
+            } catch (error) {
+                logs.push("<span style='color:#f87171;'>خطأ في الكود: " + error.message + "</span>");
+            }
+
+            console.log = originalConsoleLog;
+
+            if (logs.length > 0) {
+                outputDiv.innerHTML = logs.join('<br>');
+            } else {
+                outputDiv.innerHTML = "تم التنفيذ (لا توجد مخرجات بـ console.log).";
+            }
+        }
+
+        function runPython() {
+            const code = document.getElementById('code-python').value;
+            const outputDiv = document.getElementById('output-python');
+            let logs = [];
+            const lines = code.split('\n');
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (trimmed.startsWith('print(') && trimmed.endsWith(')')) {
+                    let content = trimmed.substring(6, trimmed.length - 1).trim();
+                    if ((content.startsWith('"') && content.endsWith('"')) || (content.startsWith("'") && content.endsWith("'"))) {
+                        content = content.substring(1, content.length - 1);
+                    } else {
+                        try { content = eval(content); } catch (e) { }
+                    }
+                    logs.push(content);
+                }
+            });
+
+            if (logs.length > 0) {
+                outputDiv.innerHTML = logs.join('<br>');
+            } else {
+                outputDiv.innerHTML = "تم التنفيذ (لا توجد مخرجات بـ print).";
+            }
+        }
+
+        function clearEditor(lang) {
+            document.getElementById(`code-${lang}`).value = "";
+            updateLines(lang);
+            if (lang === 'html') runHTML();
+            if (lang === 'js') document.getElementById('output-js').innerHTML = "تم مسح الشاشة.";
+            if (lang === 'python') document.getElementById('output-python').innerHTML = "تم مسح الشاشة.";
+        }
+
+        window.onload = function () {
+            ['html', 'js', 'python'].forEach(lang => updateLines(lang));
+        };
+    </script>
+
+</body>
+
+</html>
